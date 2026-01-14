@@ -1,10 +1,37 @@
 const express = require("express");
 const router = express.Router();
 
-const { signup, login } = require("../controllers/authController");
+// TEST
+router.get("/test", (req, res) => {
+  res.json({ message: "Auth route working" });
+});
 
-// Updated route paths
-router.post("/register", signup); // /api/register
-router.post("/login", login);     // /api/login
+// SIGNUP
+router.post("/signup", (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Missing fields" });
+  }
+
+  res.json({
+    success: true,
+    message: "Signup success",
+  });
+});
+
+// LOGIN
+router.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Missing fields" });
+  }
+
+  res.json({
+    success: true,
+    message: "Login success",
+  });
+});
 
 module.exports = router;

@@ -1,7 +1,7 @@
-require("dotenv").config();          // Load variables from .env
+require("dotenv").config(); // Load variables from .env
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./db");  // Import db.js for MongoDB connection
+const connectDB = require("./db"); // Import db.js for MongoDB connection
 const authRoutes = require("./routes/authRoutes");
 
 const app = express();
@@ -10,8 +10,13 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // <-- Your frontend URL (Vite default)
+    credentials: true, // allow cookies if needed
+  })
+);
+app.use(express.json()); // Parse JSON bodies
 
 // Test route
 app.get("/", (req, res) => {

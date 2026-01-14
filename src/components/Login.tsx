@@ -3,9 +3,7 @@ import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Users, ArrowRight } from 'lucide-react';
 
-interface LoginProps {
-  onLogin: () => void;
-}
+interface LoginProps { onLogin: () => void }
 
 export function Login({ onLogin }: LoginProps) {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -15,11 +13,9 @@ export function Login({ onLogin }: LoginProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // ✅ CORRECT API URLS
     const url = isRegistering
-      ? 'http://localhost:5000/api/signup'
-      : 'http://localhost:5000/api/login';
+      ? '/api/signup'
+      : '/api/login';
 
     const payload = isRegistering
       ? { name, email, password }
@@ -28,19 +24,15 @@ export function Login({ onLogin }: LoginProps) {
     try {
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
       const data = await response.json();
-
       if (data.success) {
         alert(data.message);
-        onLogin(); // dashboard-ku pogum
+        onLogin();
       } else {
-        alert(data.message || 'Authentication failed');
+        alert(data.message || 'Invalid credentials');
       }
     } catch (error) {
       console.error(error);
@@ -49,71 +41,52 @@ export function Login({ onLogin }: LoginProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl mb-4 shadow-lg">
-            <Users className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            SkillSwap
-          </h1>
-          <p className="text-gray-600">
-            Exchange skills with fellow students
-          </p>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+        <div className="text-center mb-6">
+          <Users className="w-12 h-12 mx-auto text-blue-500" />
+          <h1 className="text-2xl font-bold text-gray-800">SkillSwap</h1>
         </div>
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            {isRegistering ? 'Create Account' : 'Welcome Back'}
-          </h2>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {isRegistering && (
-              <Input
-                label="Full Name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            )}
-
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {isRegistering && (
             <Input
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              label="Full Name"
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
               required
             />
+          )}
+          <Input
+            label="Email"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+          <Button type="submit" fullWidth>
+            {isRegistering ? 'Sign Up' : 'Sign In'}
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
+        </form>
 
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-
-            <Button type="submit" fullWidth>
-              {isRegistering ? 'Sign Up' : 'Sign In'}
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => setIsRegistering(!isRegistering)}
-              className="text-sm text-blue-600 font-medium"
-            >
-              {isRegistering
-                ? 'Already have an account? Sign in'
-                : "Don't have an account? Sign up"}
-            </button>
-          </div>
+        <div className="mt-4 text-center">
+          <button
+            onClick={() => setIsRegistering(!isRegistering)}
+            className="text-sm text-blue-600 font-medium"
+          >
+            {isRegistering
+              ? 'Already have an account? Sign in'
+              : "Don't have an account? Sign up"}
+          </button>
         </div>
       </div>
     </div>
